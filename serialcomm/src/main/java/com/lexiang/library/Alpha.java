@@ -3,8 +3,9 @@ package com.lexiang.library;
 import android.util.Log;
 
 import com.lexiang.library.Util.ByteUtil;
+import com.lexiang.library.Util.ByteSerialPortReaderListener;
 import com.lexiang.library.app_serialport_api.SerialPortClient;
-import com.lexiang.library.queue.ByteSerialPortData;
+import com.lexiang.library.Util.ByteSerialPortData;
 import com.lexiang.library.queue.DataHandleListener;
 import com.lexiang.library.queue.DataHandler;
 import com.lexiang.library.queue.SerialPortData;
@@ -26,33 +27,34 @@ public class Alpha {
         serialPortStrategy.setSerialPortPath("/dev/ttyS2");
 
         //init read handler
-        DataHandler readerHandler = new DataHandler<byte[]>() {
+        DataHandler readerHandler = new DataHandler() {
             @Override
-            public void handleData(SerialPortData<byte[]> serialPortData) throws TRMError {
-                if (serialPortData.getData() != null) {
-                    Log.i("IncomeDataHandler2", ByteUtil.toDisplayString(serialPortData.getData()));
+            public void handleData(SerialPortData serialPortData) throws TRMError {
+                if (serialPortData.getDataBytes() != null) {
+                    Log.i("IncomeDataHandler2", ByteUtil.toDisplayString(serialPortData.getDataBytes()));
                 }
             }
         };
 
-        DataHandler writerHandler = new DataHandler<byte[]>() {
+        DataHandler writerHandler = new DataHandler() {
             @Override
-            public void handleData(SerialPortData<byte[]> serialPortData) throws TRMError {
-                if (SerialPortClient.getInstance().writeData(serialPortData.getData()) > -1) {
-                    if (serialPortData.getMessageHandleListener() != null) {
-                        serialPortData.getMessageHandleListener().onSucceed(ByteUtil.toDisplayString(serialPortData.getData()));
+            public void handleData(SerialPortData serialPortData) throws TRMError {
+
+                if (SerialPortClient.getInstance().writeData(serialPortData.getDataBytes()) > -1) {
+                    if (serialPortData.getDataHandleListener() != null) {
+                        serialPortData.getDataHandleListener().onSucceed(ByteUtil.toDisplayString(serialPortData.getDataBytes()));
                     }
                 } else {
-                    if (serialPortData.getMessageHandleListener() != null) {
-                        serialPortData.getMessageHandleListener().onFailed(ByteUtil.toDisplayString(serialPortData.getData()));
+                    if (serialPortData.getDataHandleListener() != null) {
+                        serialPortData.getDataHandleListener().onFailed(ByteUtil.toDisplayString(serialPortData.getDataBytes()));
                     }
                 }
             }
         };
+
         SerialPortReader.init(readerHandler);
         SerialPortWriter.init(writerHandler);
-        SerialPortClient.getInstance().start(serialPortStrategy);
-
+        SerialPortClient.getInstance().start(serialPortStrategy,new ByteSerialPortReaderListener());
         byte[] bytes = new byte[10];
         SerialPortData<byte[]> byteSerialPortData = new ByteSerialPortData(bytes, new DataHandleListener() {
             @Override
@@ -65,6 +67,7 @@ public class Alpha {
                 Log.i(TAG,"onFailed: " + str);
             }
         });
+
         SerialPortWriter.addWriteRequest(byteSerialPortData);
     }
 }

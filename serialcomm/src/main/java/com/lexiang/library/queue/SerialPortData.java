@@ -1,12 +1,12 @@
 package com.lexiang.library.queue;
 
 
-public class SerialPortData<T> implements Comparable<SerialPortData<T>> {
+abstract public class SerialPortData<T> implements Comparable<SerialPortData<T>> {
     private final String TAG = this.getClass().getSimpleName();
     protected T data;
     protected DataHandleListener dataHandleListener;
 
-    public DataHandleListener getMessageHandleListener() {
+    public DataHandleListener getDataHandleListener() {
         return dataHandleListener;
     }
 
@@ -26,6 +26,8 @@ public class SerialPortData<T> implements Comparable<SerialPortData<T>> {
     public T getData() {
         return data;
     }
+
+    public abstract byte[] getDataBytes();
 
     @Override
     public int compareTo(SerialPortData<T> other) {

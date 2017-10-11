@@ -4,11 +4,9 @@ import android.util.Log;
 
 import com.lexiang.library.log.Logger;
 import com.lexiang.library.log.LoggerFactory;
-import com.lexiang.library.queue.ByteSerialPortData;
+import com.lexiang.library.Util.ByteSerialPortData;
 import com.lexiang.library.queue.DataHandleListener;
 import com.lexiang.library.queue.SerialPortWriter;
-
-import android_serialport_api.SerialPort;
 
 class OutComeSignalDaemon extends Thread {
     private Logger logger = LoggerFactory.getLog(this.getClass());

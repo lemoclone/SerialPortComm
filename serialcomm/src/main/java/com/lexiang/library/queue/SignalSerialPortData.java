@@ -5,4 +5,9 @@ public class SignalSerialPortData extends SerialPortData<Signal> {
         this.data = data;
         dataHandleListener = requestHandleListener;
     }
+
+    @Override
+    public byte[] getDataBytes() {
+        return new byte[0];
+    }
 }

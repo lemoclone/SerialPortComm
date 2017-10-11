@@ -11,12 +11,12 @@ class OutcomeDataHandler implements DataHandler {
     @Override
     public void handleData(SerialPortData serialPortData) throws TRMError {
         /*if (SerialPortClient.getInstance().writeData((byte[]) serialPortData.data) > -1) {
-            if (serialPortData.getMessageHandleListener() != null) {
-                serialPortData.getMessageHandleListener().onSucceed(ByteUtil.toDisplayString((byte[]) serialPortData.getData()));
+            if (serialPortData.getDataHandleListener() != null) {
+                serialPortData.getDataHandleListener().onSucceed(ByteUtil.toDisplayString((byte[]) serialPortData.getData()));
             }
         } else {
-            if (serialPortData.getMessageHandleListener() != null) {
-                serialPortData.getMessageHandleListener().onFailed(ByteUtil.toDisplayString((byte[]) serialPortData.getData()));
+            if (serialPortData.getDataHandleListener() != null) {
+                serialPortData.getDataHandleListener().onFailed(ByteUtil.toDisplayString((byte[]) serialPortData.getData()));
             }
         }*/
     }
