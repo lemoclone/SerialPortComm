@@ -1,0 +1,1 @@
+APP_ABI := armeabi armeabi-v7a mips arm64-v8a mips64

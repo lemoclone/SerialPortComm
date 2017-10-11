@@ -1,0 +1,14 @@
+.gradle/
+.idea/
+/.DS_Store
+/build
+/captures
+/gradle.properties
+/import-summary.txt
+/app/build
+/app/lint.xml
+gorun.iml
+*.iml
+local.properties
+common/common.iml
+
