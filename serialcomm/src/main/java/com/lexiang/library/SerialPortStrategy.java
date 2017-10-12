@@ -1,34 +1,26 @@
 package com.lexiang.library;
 
+import com.lexiang.library.app_serialport_api.Constants;
+
 /**
  * Created by hudafei on 11/10/2017.
  */
 
 public class SerialPortStrategy {
-    //Command head
-    public static int dataHead = 0xFC;
-    //Command tail
-    public static int dataTail = 0xFD;
     //Input stream byte size
-    public int inputStreamSizeInByte = 16;
+    private int inputStreamSizeInByte = 16;
     //Serial port path
-    public String serialPortPath = "/dev/ttyS2";
-
-    public static int getDataHead() {
-        return dataHead;
-    }
-
-    public static void setDataHead(int dataHead) {
-        SerialPortStrategy.dataHead = dataHead;
-    }
-
-    public static int getDataTail() {
-        return dataTail;
-    }
-
-    public static void setDataTail(int dataTail) {
-        SerialPortStrategy.dataTail = dataTail;
-    }
+    private String serialPortPath = "/dev/ttyS2";
+    //Serial port baud rate
+    private int serialPortBaudRate = Constants.SERIAL_BAUD_RATE_9600;
+    //Serial port data bits
+    private int serialPortDataBits = Constants.DATABITS_8;
+    //Serial port stop bits
+    private int serialPortStopBits = Constants.STOPBITS_1;
+    //Serial port parity
+    private int serialPortParity = Constants.PARITY_NONE;
+    //Serial port reader time interval,i.e. read the port in every 100ms
+    private int serialPortReaderIntervalTimeInMillis = 100;
 
     public int getInputStreamSizeInByte() {
         return inputStreamSizeInByte;
@@ -45,4 +37,45 @@ public class SerialPortStrategy {
     public void setSerialPortPath(String serialPortPath) {
         this.serialPortPath = serialPortPath;
     }
+
+    public int getSerialPortDataBits() {
+        return serialPortDataBits;
+    }
+
+    public void setSerialPortDataBits(int serialPortDataBits) {
+        this.serialPortDataBits = serialPortDataBits;
+    }
+
+    public int getSerialPortStopBits() {
+        return serialPortStopBits;
+    }
+
+    public void setSerialPortStopBits(int serialPortStopBits) {
+        this.serialPortStopBits = serialPortStopBits;
+    }
+
+    public int getSerialPortParity() {
+        return serialPortParity;
+    }
+
+    public void setSerialPortParity(int serialPortParity) {
+        this.serialPortParity = serialPortParity;
+    }
+
+    public int getSerialPortBaudRate() {
+        return serialPortBaudRate;
+    }
+
+    public void setSerialPortBaudRate(int serialPortBaudRate) {
+        this.serialPortBaudRate = serialPortBaudRate;
+    }
+
+    public int getSerialPortReaderIntervalTimeInMillis() {
+        return serialPortReaderIntervalTimeInMillis;
+    }
+
+    public void setSerialPortReaderIntervalTimeInMillis(int serialPortReaderIntervalTimeInMillis) {
+        this.serialPortReaderIntervalTimeInMillis = serialPortReaderIntervalTimeInMillis;
+    }
 }
+

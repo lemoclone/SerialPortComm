@@ -28,7 +28,6 @@ public class OutComeSignalDaemonProxy {
     }
 
     private void start() {
-        //定时发送轮询信号给电机驱动
         if (outComeSignalDaemon != null && !outComeSignalDaemon.isAlive()) {
             outComeSignalDaemon.start();
         } else {
@@ -37,17 +36,17 @@ public class OutComeSignalDaemonProxy {
         }
     }
 
-/*    public void quit() {
+    public void quit() {
         if (outComeSignalDaemon != null) {
             outComeSignalDaemon.quit();
         }
-    }*/
+    }
 
-/*    public void pause() {
+    public void pause() {
         if (outComeSignalDaemon != null) {
             outComeSignalDaemon.pauseSend();
         }
-    }*/
+    }
 
     public void resume() {
         if (outComeSignalDaemon != null) {

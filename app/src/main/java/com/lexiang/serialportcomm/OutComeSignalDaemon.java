@@ -16,17 +16,17 @@ class OutComeSignalDaemon extends Thread {
 
     @Override
     public void run() {
-        logInfo("<---跑步机消息轮询发送开始--->");
+        logInfo("<---serial port poll start--->");
 
         while (true) {
             if (mQuit) {
-                logInfo("<---跑步机消息轮询发送结束--->");
+                logInfo("<---serial port poll end--->");
                 return;
             }
             try {
                 while (true) {
                     if (mQuit) {
-                        logInfo("<---跑步机消息轮询发送结束--->");
+                        logInfo("<---serial port poll end--->");
                         return;
                     }
                     if (mPause) {
@@ -36,7 +36,6 @@ class OutComeSignalDaemon extends Thread {
                     }
                 }
                 Thread.sleep(20000);
-
                 byte[] bytes = new byte[10];
 
                 bytes[0] = (byte) 0xfc;
@@ -53,18 +52,18 @@ class OutComeSignalDaemon extends Thread {
                 ByteSerialPortData byteSerialPortData = new ByteSerialPortData(bytes, new DataHandleListener() {
                     @Override
                     public void onSucceed(String str) {
-                        Log.i(TAG,"onSucceed: " + str);
+                        Log.i(TAG, "onDataChanged: " + str);
                     }
 
                     @Override
                     public void onFailed(String str) {
-                        Log.i(TAG,"onFailed: " + str);
+                        Log.i(TAG, "onFailed: " + str);
                     }
                 });
 
                 SerialPortWriter.addWriteRequest(byteSerialPortData);
             } catch (InterruptedException e) {
-                logInfo("<---跑步机消息轮询发送结束--->");
+                logInfo("<---serial port poll end--->");
                 return;
             }
         }
@@ -72,11 +71,9 @@ class OutComeSignalDaemon extends Thread {
 
     public void pauseSend() {
         mPause = true;
-        logInfo("<---智能跑步暂停--->");
     }
 
     public void resumeSend() {
-        logInfo("<---智能跑步恢复--->");
         mPause = false;
     }
 
@@ -86,7 +83,6 @@ class OutComeSignalDaemon extends Thread {
     }
 
     private void logInfo(String str) {
-        Log.i(TAG, str);
         logger.info(str);
     }
 }

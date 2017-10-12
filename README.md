@@ -1,27 +1,19 @@
-package com.lexiang.library;
+Serial port library
+===================
+Serial port communication library for Android
 
-import android.util.Log;
+## Setup
+Add the library as aar dependency to your build.
 
-import com.lexiang.library.Util.ByteSerialPortData;
-import com.lexiang.library.Util.ByteSerialPortReaderListener;
-import com.lexiang.library.Util.ByteUtil;
-import com.lexiang.library.app_serialport_api.Constants;
-import com.lexiang.library.app_serialport_api.SerialPortClient;
-import com.lexiang.library.queue.DataHandleListener;
-import com.lexiang.library.queue.DataHandler;
-import com.lexiang.library.queue.SerialPortData;
-import com.lexiang.library.queue.SerialPortReader;
-import com.lexiang.library.queue.SerialPortWriter;
+**Gradle**
 
-/**
- * Created by hudafei on 11/10/2017.
- * serial port demo
- */
+    compile 'com.lexiang.library:serialcomm:1.0.0'
 
-public class Alpha {
-    private static final String TAG = "Alpha";
+## Usage
 
-    public static void init() {
+Open serial port and start reader, writer queue
+
+        //set up serial port
         SerialPortStrategy serialPortStrategy = new SerialPortStrategy();
         serialPortStrategy.setSerialPortBaudRate(Constants.SERIAL_BAUD_RATE_4800);
         serialPortStrategy.setSerialPortDataBits(Constants.DATABITS_8);
@@ -34,18 +26,20 @@ public class Alpha {
         //set the device port path
         serialPortStrategy.setSerialPortPath("/dev/ttyS2");
 
+        //create a dataHandler for read data from serial port
         DataHandler readerHandler = new DataHandler() {
             @Override
-            public void handleData(SerialPortData serialPortData) {
+            public void handleData(SerialPortData serialPortData) throws TRMError {
                 if (serialPortData.getDataBytes() != null) {
                     Log.i("IncomeDataHandler2", ByteUtil.toDisplayString(serialPortData.getDataBytes()));
                 }
             }
         };
 
+        //create a dataHandler for write data into serial port
         DataHandler writerHandler = new DataHandler() {
             @Override
-            public void handleData(SerialPortData serialPortData) {
+            public void handleData(SerialPortData serialPortData) throws TRMError {
 
                 if (SerialPortClient.getInstance().writeData(serialPortData.getDataBytes()) > -1) {
                     if (serialPortData.getDataHandleListener() != null) {
@@ -59,24 +53,23 @@ public class Alpha {
             }
         };
 
+        //init SerialPortReader
         SerialPortReader.init(readerHandler);
+        //init SerialPortWriter
         SerialPortWriter.init(writerHandler);
-        SerialPortClient.getInstance().start(serialPortStrategy, new ByteSerialPortReaderListener());
+        //open serial port
+        SerialPortClient.getInstance().start(serialPortStrategy,new ByteSerialPortReaderListener());
 
-        //i.e. write a empty byte array with length of 10 into serial port
-        byte[] bytes = new byte[10];
-        SerialPortData<byte[]> byteSerialPortData = new ByteSerialPortData(bytes, new DataHandleListener() {
+Custom the SerialPortListener
+
+        SerialPortReaderListener serialPortReaderListener = new SerialPortReaderListener() {
             @Override
-            public void onSucceed(String str) {
-                Log.i(TAG, "onDataChanged: " + str);
+            public void onDataChanged(byte[] data) {
+                //do sth whatever you'll do,such as byte decode digester
             }
+        };
+       SerialPortClient.getInstance().start(serialPortStrategy,serialPortReaderListener);
 
-            @Override
-            public void onFailed(String str) {
-                Log.i(TAG, "onFailed: " + str);
-            }
-        });
 
-        SerialPortWriter.addWriteRequest(byteSerialPortData);
-    }
-}
+## examples
+see demo

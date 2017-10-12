@@ -43,7 +43,7 @@ public class SerialPort {
 
 		mFd = open(device.getAbsolutePath(), baudrate, flags, databits, stopbits, parity);
 		if (mFd == null) {
-			Log.i(TAG,"native open returns null");
+			Log.i(TAG,"native connect returns null");
 			throw new IOException();
 		}
 		mFileInputStream = new FileInputStream(mFd);

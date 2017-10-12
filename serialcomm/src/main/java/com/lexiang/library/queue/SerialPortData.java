@@ -20,13 +20,16 @@ abstract public class SerialPortData<T> implements Comparable<SerialPortData<T>>
     public SerialPortData(T data, DataHandleListener requestHandleListener) {
         this.data = data;
         this.dataHandleListener = requestHandleListener;
-
     }
 
     public T getData() {
         return data;
     }
 
+    /**
+     * must override by subclass for object serial data
+     * @return
+     */
     public abstract byte[] getDataBytes();
 
     @Override

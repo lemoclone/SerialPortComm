@@ -1,6 +1,8 @@
 package com.lexiang.library.log;
 
 
+import android.util.Log;
+
 import com.lexiang.library.Util.Util;
 import com.lexiang.library.exception.SerialException;
 
@@ -39,7 +41,6 @@ public class Logger {
     }
 
     public void error(SerialException ex) {
-
         StringBuffer sb = new StringBuffer();
         Writer writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
@@ -81,7 +82,6 @@ public class Logger {
     }
 
     private String errorStr(String msg) {
-
         StackTraceElement traceElement = ((new Exception()).getStackTrace())[2];
         StringBuffer toStringBuffer = new StringBuffer("[").append(ERROR).append(
                 traceElement.getFileName()).append(" | ").append(
@@ -99,7 +99,7 @@ public class Logger {
         path = path + currentDate + ".log";
         info = time + " " + info;
         Util.writeFile(path, info);
-
+        Log.i(Thread.currentThread().toString(),info);
     }
 
     private void putMessage(String logInfo) {

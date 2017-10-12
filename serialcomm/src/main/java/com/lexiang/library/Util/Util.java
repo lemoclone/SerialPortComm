@@ -1,6 +1,5 @@
 package com.lexiang.library.Util;
 
-import com.lexiang.library.SerialPortStrategy;
 import com.lexiang.library.exception.SerialException;
 import com.lexiang.library.log.Logger;
 import com.lexiang.library.log.LoggerFactory;
@@ -13,7 +12,7 @@ public class Util {
     private static Logger log = LoggerFactory.getLog(Util.class);
 
     /**
-     * 逐行写入
+     * write the log
      *
      * @param path
      * @param content
@@ -23,8 +22,8 @@ public class Util {
     }
 
     /**
-     * 休眠,单位毫秒
-     * @param secondInMillis 毫秒
+     * sleep
+     * @param secondInMillis
      */
     public static void sleep(long secondInMillis){
         try {
@@ -32,26 +31,6 @@ public class Util {
         } catch (InterruptedException e) {
             log.error(new SerialException(e));
         }
-    }
-
-
-    public static byte[] readInput(byte[] buffer) {
-        int start = -1;
-        int end = -1;
-        for (int i = 0; i < buffer.length; i++) {
-            if (buffer[i] == SerialPortStrategy.getDataHead()) {
-                start = i;
-            }
-            if (buffer[i] == SerialPortStrategy.getDataTail()) {
-                end = i;
-            }
-            if (start != -1 && end != -1) {
-                byte[] res = new byte[end - start + 1];
-                System.arraycopy(buffer, start, res, 0, end - start + 1);
-                return res;
-            }
-        }
-        return null;
     }
 
     private static void writeFile(String path, String content, boolean append) {

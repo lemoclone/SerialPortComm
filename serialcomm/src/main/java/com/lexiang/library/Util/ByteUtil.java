@@ -17,10 +17,6 @@ public class ByteUtil {
         System.out.println();
     }
 
-    public static void printBytes(byte[] bytes) {
-        printBytes(bytes, null);
-    }
-
     public static String toDisplayString(byte[] bytes) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < bytes.length; i++) {
@@ -44,40 +40,5 @@ public class ByteUtil {
         } else {
             return c - 'a' + 10;
         }
-    }
-
-    public static int arrayToInt(char[] chars) {
-        int res = 0;
-        for (int i = 0; i < chars.length; i++) {
-            res = res * 16 + hexCharToInt(chars[i]);
-        }
-        return res;
-    }
-
-    public static String intToByteChar(int i) {
-        char[] chars = new char[2];
-        chars[0] = decToHex((i & 0xFF) >>> 4);
-        chars[1] = decToHex(i & 0x0F);
-        return chars[0] + "" + chars[1];
-
-    }
-
-    /**
-     * |开始 | 序号 | 长度 | 命令编号 |  数据   | 校验和 | 结束符 |
-     * |  1  |  1  |  1  |  1      |  变长   |   1   |    1  |
-     * <p>
-     * 校验和
-     * 除了命令开始字符和结束符外，其它字节都参与校验和计算，校验和由相关字节异或而得，如：
-     * 校验和 =  DATA1^DATA2^DATA3^...
-     */
-    public static int calValidSum(byte[] buffer, int start, int end) {
-        if (start < 0 || end > buffer.length - 1) {
-            return 0;
-        }
-        int res = buffer[start];
-        for (int i = start + 1; i <= end; i++) {
-            res = res ^ buffer[i];
-        }
-        return res;
     }
 }

@@ -29,10 +29,10 @@ class Dispatcher extends Thread {
 
     @Override
     public void run() {
-        log(tag + "开始运行");
+        log(tag + "start run");
         while (true) {
             if (quit) {
-                log(tag + "结束运行");
+                log(tag + "stop run");
                 return;
             }
             SerialPortData<?> request = null;
@@ -40,9 +40,9 @@ class Dispatcher extends Thread {
                 request = queue.take();
                 dataHandler.handleData(request);
             } catch (InterruptedException e) {
-                log(tag + "结束运行");
-            } catch (TRMError vmcError) {
-                log(tag + "出现异常,结束运行" + vmcError.toString());
+                log(tag + "stop run");
+            } catch (Exception e) {
+
             }
         }
     }

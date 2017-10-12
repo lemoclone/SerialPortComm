@@ -13,34 +13,46 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Serial port client maintain for input and output
+ */
 public class SerialPortClient {
 
     private Logger logger = LoggerFactory.getLog(SerialPortClient.class);
-
-    public int inputStreamSizeInByte = 16;
-    public String serialPortPath = "/dev/ttyS2";
-
     /**
-     * 输入流，来自串口
+     * read data from serial port
      */
     private FileInputStream inputStream;
-
     /**
-     * 输出流，流向串口
+     * write data into serial port
      */
     private FileOutputStream outputStream;
+    /**
+     * Connect to the physical serial port
+     */
+    private SerialPortConnector serialPortConnector;
+    /**
+     * Callback event after read data from serial port
+     */
+    private SerialPortReaderListener serialPortReaderListener;
+    /**
+     * Execute the read event of serial port
+     */
+    private ExecutorService serialPortReaderExecutorService = Executors.newFixedThreadPool(2, new CustomThreadFactory("15"));
+    /**
+     * instance of serial port for management of  connection
+     */
+    private static SerialPortClient serialPortClient;
+    /**
+     * wait for 500ms after serial port connect
+     */
+    private static final int TIME_FOR_WAIT_OPEN_IN_MILLIS = 500;
 
     /**
-     * 服务执行者
+     * get the single instance
+     *
+     * @return
      */
-    private ExecutorService executorService = Executors.newFixedThreadPool(2, new CustomThreadFactory("12"));
-
-    private Connector connector;
-
-    private SerialPortReaderListener serialPortReaderListener;
-
-    private static SerialPortClient serialPortClient;
-
     public static SerialPortClient getInstance() {
         if (serialPortClient == null) {
             synchronized (SerialPortClient.class) {
@@ -52,39 +64,26 @@ public class SerialPortClient {
         return serialPortClient;
     }
 
-
+    /**
+     * add serial port reader listener and try to connect the port
+     *
+     * @param serialPortStrategy       parameters of serial port
+     * @param serialPortReaderListener callback after read data
+     */
     public void start(SerialPortStrategy serialPortStrategy,
                       SerialPortReaderListener serialPortReaderListener) {
-        serialPortClient.inputStreamSizeInByte = serialPortStrategy.inputStreamSizeInByte;
-        serialPortClient.serialPortPath = serialPortStrategy.serialPortPath;
-        serialPortClient.serialPortReaderListener = serialPortReaderListener;
-        serialPortClient.setListener(serialPortReaderListener);
-    }
-
-    /**
-     * add serial port listener and try to open port
-     *
-     * @param serialPortReaderListener
-     */
-    private void setListener(SerialPortReaderListener serialPortReaderListener) {
         this.serialPortReaderListener = serialPortReaderListener;
-        connect();
-        Util.sleep(1000);
-        startListenSerialPort();
+        openSerialPort(serialPortStrategy);
+        Util.sleep(TIME_FOR_WAIT_OPEN_IN_MILLIS);
+        startListenSerialPort(serialPortStrategy);
     }
 
     /**
-     * close serial port
+     * write data to serial port
+     *
+     * @param data
+     * @return
      */
-    public void close() {
-        try {
-            this.connector.close();
-            this.executorService.shutdownNow();
-        } catch (Exception e) {
-            logger.error(new SerialException(e));
-        }
-    }
-
     public int writeData(byte[] data) {
         if (data.length <= 0) return -1;
         if (outputStream == null) {
@@ -101,67 +100,81 @@ public class SerialPortClient {
         return -1;
     }
 
-    public byte[] readData() {
-        if (null == inputStream) {
-            return null;
-        }
-        int len;
-        byte[] buffer = new byte[64];
+    /**
+     * open serial port
+     *
+     * @param strategy
+     */
+    private void openSerialPort(SerialPortStrategy strategy) {
         try {
-            len = inputStream.read(buffer);
-            if (len > 0) {
-                byte[] bytes = Util.readInput(buffer);
-                return bytes;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private void connect() {
-        try {
-            if (connector != null) {
+            if (serialPortConnector != null) {
                 close();
             }
-            connector = new Connector(serialPortPath, Connector.SERIAL_BAUD_RATE_4800, Connector.DATABITS_8, Connector.STOPBITS_1, Connector.PARITY_NONE);
-            connector.open();
-
-            inputStream = connector.getInputStream();
-            outputStream = connector.getOutputStream();
-            logger.info("setListener inputStream:" + inputStream + " outputStream:" + outputStream);
-
+            serialPortConnector = new SerialPortConnector(strategy.getSerialPortPath(),
+                    strategy.getSerialPortBaudRate(),
+                    strategy.getSerialPortDataBits(),
+                    strategy.getSerialPortStopBits(),
+                    strategy.getSerialPortParity());
+            serialPortConnector.connect();
+            inputStream = serialPortConnector.getFileInputStream();
+            outputStream = serialPortConnector.getOutputStream();
         } catch (SecurityException e) {
             logger.error(new SerialException(e));
         }
     }
 
-    private void startListenSerialPort() {
-        executorService.submit(new Runnable() {
+    /**
+     * close serial port
+     */
+    public void close() {
+        try {
+            if (serialPortClient == null) {
+                return;
+            }
+            serialPortConnector.close();
+            serialPortReaderExecutorService.shutdownNow();
+        } catch (Exception e) {
+            logger.error(new SerialException(e));
+        }
+    }
+
+    /**
+     * keep reading the serial port
+     */
+    private void startListenSerialPort(final SerialPortStrategy strategy) {
+        serialPortReaderExecutorService.submit(new Runnable() {
             @Override
             public void run() {
-                readDataFromSerialPort();
+                readDataFromSerialPort(strategy);
             }
         });
     }
 
-    private void readDataFromSerialPort() {
+    /**
+     * read data from serial port
+     *
+     * @param strategy
+     */
+    private void readDataFromSerialPort(SerialPortStrategy strategy) {
         while (true) {
             try {
-                Util.sleep(100);
+                Util.sleep(strategy.getSerialPortReaderIntervalTimeInMillis());
                 if (inputStream == null) {
                     continue;
                 }
-                byte[] buffer = new byte[inputStreamSizeInByte];
+                byte[] buffer = new byte[strategy.getInputStreamSizeInByte()];
                 int len = inputStream.read(buffer);
                 if (len > 0) {
-                    //logger.info("readDataFromSerialPort length is:" + len + ", data is:" + new String(buffer, 0, len));
-                    //LogUtil.i("XhSerialPort", "收到串口数据: " + ByteUtil.toDisplayString(buffer));
-                    serialPortReaderListener.onSucceed(buffer);
+                    serialPortReaderListener.onDataChanged(buffer);
                 }
             } catch (Exception e) {
                 logger.error(new SerialException(e));
             }
         }
     }
+
+    /**
+     * prevent init
+     */
+    private SerialPortClient() {}
 }
