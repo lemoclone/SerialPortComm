@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Serial port client maintain for input and output
@@ -38,7 +40,7 @@ public class SerialPortClient {
     /**
      * Execute the read event of serial port
      */
-    private ExecutorService serialPortReaderExecutorService = Executors.newFixedThreadPool(2, new CustomThreadFactory("15"));
+    private ExecutorService serialPortReaderExecutorService = Executors.newFixedThreadPool(2, new SerialPortReaderThreadFactory());
     /**
      * instance of serial port for management of  connection
      */
@@ -177,4 +179,30 @@ public class SerialPortClient {
      * prevent init
      */
     private SerialPortClient() {}
+
+    private static class SerialPortReaderThreadFactory implements ThreadFactory {
+        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
+
+        public SerialPortReaderThreadFactory() {
+            SecurityManager s = System.getSecurityManager();
+            group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+            namePrefix = "SerialPortReader-pool-" +
+                    poolNumber.getAndIncrement() +
+                    "-thread-";
+        }
+
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r, namePrefix
+                    + threadNumber.getAndIncrement(), 0);
+            if (t.isDaemon())
+                t.setDaemon(false);
+            if (t.getPriority() != Thread.NORM_PRIORITY)
+                t.setPriority(Thread.NORM_PRIORITY);
+            return t;
+        }
+    }
 }
