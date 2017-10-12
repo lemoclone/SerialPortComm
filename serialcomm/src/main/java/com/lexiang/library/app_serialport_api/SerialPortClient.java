@@ -51,7 +51,7 @@ public class SerialPortClient {
     /**
      * get the single instance
      *
-     * @return
+     * @return SerialPortClient instance
      */
     public static SerialPortClient getInstance() {
         if (serialPortClient == null) {
@@ -81,8 +81,8 @@ public class SerialPortClient {
     /**
      * write data to serial port
      *
-     * @param data
-     * @return
+     * @param data in byte[]
+     * @return -1 if write failed, the length of data if write succeed
      */
     public int writeData(byte[] data) {
         if (data.length <= 0) return -1;

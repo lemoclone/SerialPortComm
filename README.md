@@ -7,7 +7,7 @@ Add the library as aar dependency to your build.
 
 **Gradle**
 
-    compile 'com.lexiang.library:serialcomm:1.0.0'
+    compile 'com.lexiang.library:serialcomm:1.0.1'
 
 ## Usage
 

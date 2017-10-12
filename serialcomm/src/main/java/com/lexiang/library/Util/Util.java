@@ -14,8 +14,8 @@ public class Util {
     /**
      * write the log
      *
-     * @param path
-     * @param content
+     * @param path the log path
+     * @param content the log content
      */
     public static void writeFile(String path, String content) {
         writeFile(path, content, true);
@@ -23,7 +23,7 @@ public class Util {
 
     /**
      * sleep
-     * @param secondInMillis
+     * @param secondInMillis sleep time in millisecond
      */
     public static void sleep(long secondInMillis){
         try {

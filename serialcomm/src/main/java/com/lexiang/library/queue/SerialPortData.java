@@ -28,7 +28,7 @@ abstract public class SerialPortData<T> implements Comparable<SerialPortData<T>>
 
     /**
      * must override by subclass for object serial data
-     * @return
+     * @return the byte[] of data
      */
     public abstract byte[] getDataBytes();
 

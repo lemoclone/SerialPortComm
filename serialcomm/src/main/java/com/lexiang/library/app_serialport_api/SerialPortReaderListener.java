@@ -6,7 +6,7 @@ package com.lexiang.library.app_serialport_api;
 public interface SerialPortReaderListener {
     /**
      * event when read data from serial port
-     * @param data
+     * @param data byte[] data
      */
     void onDataChanged(byte[] data);
 }
