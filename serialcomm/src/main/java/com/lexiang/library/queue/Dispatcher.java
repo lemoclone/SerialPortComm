@@ -37,6 +37,7 @@ class Dispatcher extends Thread {
             }
             SerialPortData<?> request = null;
             try {
+                log(tag + " take request");
                 request = queue.take();
                 dataHandler.handleData(request);
             } catch (InterruptedException e) {

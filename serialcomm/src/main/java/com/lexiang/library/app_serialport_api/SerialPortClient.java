@@ -1,8 +1,8 @@
 package com.lexiang.library.app_serialport_api;
 
 
-import com.lexiang.library.SerialPortStrategy;
-import com.lexiang.library.Util.Util;
+import com.lexiang.library.SerialPortParams;
+import com.lexiang.library.utils.Util;
 import com.lexiang.library.exception.SerialException;
 import com.lexiang.library.log.Logger;
 import com.lexiang.library.log.LoggerFactory;
@@ -72,7 +72,7 @@ public class SerialPortClient {
      * @param serialPortStrategy       parameters of serial port
      * @param serialPortReaderListener callback after read data
      */
-    public void start(SerialPortStrategy serialPortStrategy,
+    public void start(SerialPortParams serialPortStrategy,
                       SerialPortReaderListener serialPortReaderListener) {
         this.serialPortReaderListener = serialPortReaderListener;
         openSerialPort(serialPortStrategy);
@@ -107,7 +107,7 @@ public class SerialPortClient {
      *
      * @param strategy
      */
-    private void openSerialPort(SerialPortStrategy strategy) {
+    private void openSerialPort(SerialPortParams strategy) {
         try {
             if (serialPortConnector != null) {
                 close();
@@ -143,7 +143,7 @@ public class SerialPortClient {
     /**
      * keep reading the serial port
      */
-    private void startListenSerialPort(final SerialPortStrategy strategy) {
+    private void startListenSerialPort(final SerialPortParams strategy) {
         serialPortReaderExecutorService.submit(new Runnable() {
             @Override
             public void run() {
@@ -157,7 +157,7 @@ public class SerialPortClient {
      *
      * @param strategy
      */
-    private void readDataFromSerialPort(SerialPortStrategy strategy) {
+    private void readDataFromSerialPort(SerialPortParams strategy) {
         while (true) {
             try {
                 Util.sleep(strategy.getSerialPortReaderIntervalTimeInMillis());

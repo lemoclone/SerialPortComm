@@ -1,4 +1,4 @@
-package com.lexiang.library.Util;
+package com.lexiang.library.utils;
 
 public class ByteUtil {
 

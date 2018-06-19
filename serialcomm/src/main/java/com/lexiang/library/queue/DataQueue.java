@@ -2,7 +2,7 @@ package com.lexiang.library.queue;
 
 import java.util.concurrent.PriorityBlockingQueue;
 
-public class DataQueue {
+class DataQueue {
     private String mTag = "";
     private final PriorityBlockingQueue<SerialPortData<?>> mSignalRequestQueue = new PriorityBlockingQueue<>();
     private Dispatcher mDispatcher;

@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.lexiang.library.log.Logger;
 import com.lexiang.library.log.LoggerFactory;
-import com.lexiang.library.Util.ByteSerialPortData;
+import com.lexiang.library.utils.ByteSerialPortData;
 import com.lexiang.library.queue.DataHandleListener;
 import com.lexiang.library.queue.SerialPortWriter;
 
@@ -35,7 +35,7 @@ class OutComeSignalDaemon extends Thread {
                         break;
                     }
                 }
-                Thread.sleep(20000);
+                Thread.sleep(5000);
                 byte[] bytes = new byte[10];
 
                 bytes[0] = (byte) 0xfc;

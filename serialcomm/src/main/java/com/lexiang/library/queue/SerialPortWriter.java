@@ -9,8 +9,10 @@ public class SerialPortWriter {
     public static void init(DataHandler dataHandler) {
         if (null == mDataQueue) {
             synchronized (SerialPortWriter.class) {
-                mDataQueue = new DataQueue(dataHandler, "SerialPortWriter");
-                mDataQueue.start();
+                if (null == mDataQueue) {
+                    mDataQueue = new DataQueue(dataHandler, "SerialPortWriter");
+                    mDataQueue.start();
+                }
             }
         }
     }

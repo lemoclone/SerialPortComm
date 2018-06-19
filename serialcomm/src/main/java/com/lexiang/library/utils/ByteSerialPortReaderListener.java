@@ -1,4 +1,4 @@
-package com.lexiang.library.Util;
+package com.lexiang.library.utils;
 
 import com.lexiang.library.app_serialport_api.SerialPortReaderListener;
 import com.lexiang.library.queue.DataHandleListener;

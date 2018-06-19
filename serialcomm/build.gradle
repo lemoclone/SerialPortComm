@@ -19,6 +19,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            //指定使用libs目录下的so库
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 buildscript {

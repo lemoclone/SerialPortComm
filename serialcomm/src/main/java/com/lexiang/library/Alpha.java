@@ -2,9 +2,9 @@ package com.lexiang.library;
 
 import android.util.Log;
 
-import com.lexiang.library.Util.ByteSerialPortData;
-import com.lexiang.library.Util.ByteSerialPortReaderListener;
-import com.lexiang.library.Util.ByteUtil;
+import com.lexiang.library.utils.ByteSerialPortData;
+import com.lexiang.library.utils.ByteSerialPortReaderListener;
+import com.lexiang.library.utils.ByteUtil;
 import com.lexiang.library.app_serialport_api.Constants;
 import com.lexiang.library.app_serialport_api.SerialPortClient;
 import com.lexiang.library.queue.DataHandleListener;
@@ -22,17 +22,14 @@ public class Alpha {
     private static final String TAG = "Alpha";
 
     public static void init() {
-        SerialPortStrategy serialPortStrategy = new SerialPortStrategy();
-        serialPortStrategy.setSerialPortBaudRate(Constants.SERIAL_BAUD_RATE_4800);
-        serialPortStrategy.setSerialPortDataBits(Constants.DATABITS_8);
-        serialPortStrategy.setSerialPortParity(Constants.PARITY_NONE);
-        serialPortStrategy.setSerialPortStopBits(Constants.STOPBITS_1);
-        //set the read interval time
-        serialPortStrategy.setSerialPortReaderIntervalTimeInMillis(100);
-        //set the read buffer size
-        serialPortStrategy.setInputStreamSizeInByte(128);
-        //set the device port path
-        serialPortStrategy.setSerialPortPath("/dev/ttyS2");
+        SerialPortParams serialPortParams = new SerialPortParams.Builder()
+                .serialPortBaudRate(Constants.SERIAL_BAUD_RATE_4800)
+                .serialPortDataBits(Constants.DATABITS_8)
+                .serialPortParity(Constants.PARITY_NONE)
+                .serialPortStopBits(Constants.STOPBITS_1)
+                .serialPortReaderIntervalTimeInMillis(10)  //set the read interval time
+                .inputStreamSizeInByte(128)  //set the read buffer size
+                .serialPortPath("/dev/ttyO3").build(); //set the device port path
 
         DataHandler readerHandler = new DataHandler() {
             @Override
@@ -61,7 +58,7 @@ public class Alpha {
 
         SerialPortReader.init(readerHandler);
         SerialPortWriter.init(writerHandler);
-        SerialPortClient.getInstance().start(serialPortStrategy, new ByteSerialPortReaderListener());
+        SerialPortClient.getInstance().start(serialPortParams, new ByteSerialPortReaderListener());
 
         //i.e. write a empty byte array with length of 10 into serial port
         byte[] bytes = new byte[10];

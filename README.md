@@ -14,17 +14,14 @@ Add the library as aar dependency to your build.
 Open serial port and start reader, writer queue
 
         //set up serial port
-        SerialPortStrategy serialPortStrategy = new SerialPortStrategy();
-        serialPortStrategy.setSerialPortBaudRate(Constants.SERIAL_BAUD_RATE_4800);
-        serialPortStrategy.setSerialPortDataBits(Constants.DATABITS_8);
-        serialPortStrategy.setSerialPortParity(Constants.PARITY_NONE);
-        serialPortStrategy.setSerialPortStopBits(Constants.STOPBITS_1);
-        //set the read interval time
-        serialPortStrategy.setSerialPortReaderIntervalTimeInMillis(100);
-        //set the read buffer size
-        serialPortStrategy.setInputStreamSizeInByte(128);
-        //set the device port path
-        serialPortStrategy.setSerialPortPath("/dev/ttyS2");
+               SerialPortParams serialPortParams = new SerialPortParams.Builder()
+                       .serialPortBaudRate(Constants.SERIAL_BAUD_RATE_4800)
+                       .serialPortDataBits(Constants.DATABITS_8)
+                       .serialPortParity(Constants.PARITY_NONE)
+                       .serialPortStopBits(Constants.STOPBITS_1)
+                       .serialPortReaderIntervalTimeInMillis(10)  //set the read interval time
+                       .inputStreamSizeInByte(128)  //set the read buffer size
+                       .serialPortPath("/dev/ttyO3").build(); //set the device port path
 
         //create a dataHandler for read data from serial port
         DataHandler readerHandler = new DataHandler() {

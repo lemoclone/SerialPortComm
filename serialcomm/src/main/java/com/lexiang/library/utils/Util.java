@@ -1,4 +1,4 @@
-package com.lexiang.library.Util;
+package com.lexiang.library.utils;
 
 import com.lexiang.library.exception.SerialException;
 import com.lexiang.library.log.Logger;

@@ -3,7 +3,7 @@ package com.lexiang.library.log;
 
 import android.util.Log;
 
-import com.lexiang.library.Util.Util;
+import com.lexiang.library.utils.Util;
 import com.lexiang.library.exception.SerialException;
 
 import java.io.PrintWriter;
