@@ -170,7 +170,6 @@ public class SerialPortClient {
     private void readDataFromSerialPort(SerialPortParams strategy) {
         while (true) {
             try {
-                Util.sleep(strategy.getSerialPortReaderIntervalTimeInMillis());
                 if (inputStream == null) {
                     continue;
                 }
@@ -179,6 +178,7 @@ public class SerialPortClient {
                 if (len > 0) {
                     serialPortReaderListener.onDataChanged(buffer);
                 }
+                Util.sleep(strategy.getSerialPortReaderIntervalTimeInMillis());
             } catch (Exception e) {
                 logger.error(new SerialException(e));
             }
