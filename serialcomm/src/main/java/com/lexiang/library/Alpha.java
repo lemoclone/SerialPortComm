@@ -29,7 +29,7 @@ public class Alpha {
                 .serialPortStopBits(Constants.STOPBITS_1)
                 .serialPortReaderIntervalTimeInMillis(10)  //set the read interval time
                 .inputStreamSizeInByte(128)  //set the read buffer size
-                .serialPortPath("/dev/ttyO3").build(); //set the device port path
+                .serialPortPath("/dev/ttyS4").build(); //set the device port path
 
         DataHandler readerHandler = new DataHandler() {
             @Override
