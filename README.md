@@ -5,9 +5,8 @@ Serial port communication library for Android
 ## Setup
 Add the library as aar dependency to your build.
 
-**Gradle**
+[![](https://jitpack.io/v/lemoclone/SerialPortComm.svg)](https://jitpack.io/#lemoclone/SerialPortComm)
 
-    compile 'com.lexiang.library:serialcomm:1.0.2'
 
 ## Usage
 
