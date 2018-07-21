@@ -2,6 +2,7 @@ package com.lexiang.library.app_serialport_api;
 
 
 import com.lexiang.library.SerialPortParams;
+import com.lexiang.library.utils.ByteSerialPortReaderListener;
 import com.lexiang.library.utils.Util;
 import com.lexiang.library.exception.SerialException;
 import com.lexiang.library.log.Logger;
@@ -64,6 +65,15 @@ public class SerialPortClient {
             }
         }
         return serialPortClient;
+    }
+
+    /**
+     * add serial port reader listener and try to connect the port
+     *
+     * @param serialPortStrategy parameters of serial port
+     */
+    public void start(SerialPortParams serialPortStrategy) {
+        this.start(serialPortStrategy, new ByteSerialPortReaderListener());
     }
 
     /**
@@ -178,7 +188,8 @@ public class SerialPortClient {
     /**
      * prevent init
      */
-    private SerialPortClient() {}
+    private SerialPortClient() {
+    }
 
     private static class SerialPortReaderThreadFactory implements ThreadFactory {
         private static final AtomicInteger poolNumber = new AtomicInteger(1);

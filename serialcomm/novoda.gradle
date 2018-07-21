@@ -1,0 +1,14 @@
+group = PROJ_GROUP
+version = PROJ_VERSION
+project.archivesBaseName = PROJ_ARTIFACTID
+
+apply plugin: 'com.jfrog.bintray'
+
+publish {
+    userOrg = 'ork'
+    groupId = 'com.lexiang.library'
+    artifactId = 'SerialPortComm'
+    publishVersion = '1.0.3'
+    desc = 'for android serial port communacation'
+    website = 'https://github.com/lemoclone/SerialPortComm'
+}

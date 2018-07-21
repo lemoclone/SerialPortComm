@@ -29,7 +29,7 @@ public class Alpha {
                 .serialPortStopBits(Constants.STOPBITS_1)
                 .serialPortReaderIntervalTimeInMillis(10)  //set the read interval time
                 .inputStreamSizeInByte(128)  //set the read buffer size
-                .serialPortPath("/dev/ttyS4").build(); //set the device port path
+                .serialPortPath("/dev/ttyO3").build(); //set the device port path
 
         DataHandler readerHandler = new DataHandler() {
             @Override
@@ -58,7 +58,7 @@ public class Alpha {
 
         SerialPortReader.init(readerHandler);
         SerialPortWriter.init(writerHandler);
-        SerialPortClient.getInstance().start(serialPortParams, new ByteSerialPortReaderListener());
+        SerialPortClient.getInstance().start(serialPortParams);
 
         //i.e. write a empty byte array with length of 10 into serial port
         byte[] bytes = new byte[10];
