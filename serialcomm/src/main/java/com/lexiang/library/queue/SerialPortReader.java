@@ -10,7 +10,7 @@ public class SerialPortReader {
         if (null == mDataQueue) {
             synchronized (SerialPortWriter.class) {
                 if(null == mDataQueue) {
-                    mDataQueue = new DataQueue(incomeDataHandler, "SerialPortReader");
+                    mDataQueue = new DataQueue(incomeDataHandler, "ReaderThread");
                     mDataQueue.start();
                 }
             }

@@ -11,10 +11,6 @@ import com.lexiang.library.log.LoggerFactory;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Serial port client maintain for input and output
@@ -39,10 +35,6 @@ public class SerialPortClient {
      */
     private SerialPortReaderListener serialPortReaderListener;
     /**
-     * Execute the read event of serial port
-     */
-    private ExecutorService serialPortReaderExecutorService = Executors.newFixedThreadPool(2, new SerialPortReaderThreadFactory());
-    /**
      * instance of serial port for management of  connection
      */
     private static SerialPortClient serialPortClient;
@@ -50,6 +42,15 @@ public class SerialPortClient {
      * wait for 500ms after serial port connect
      */
     private static final int TIME_FOR_WAIT_OPEN_IN_MILLIS = 500;
+    /**
+     * serial port reader flag
+     */
+    private static volatile boolean isReaderThreadStopped = false;
+    /**
+     * serial port reader thread
+     */
+    private ReaderThread readerThread;
+
 
     /**
      * get the single instance
@@ -136,15 +137,16 @@ public class SerialPortClient {
     }
 
     /**
-     * close serial port
+     * close serial port, should be called in the onDestroy() method
      */
     public void close() {
         try {
             if (serialPortClient == null) {
                 return;
             }
+            readerThread.interrupt();
+            isReaderThreadStopped = true;
             serialPortConnector.close();
-            serialPortReaderExecutorService.shutdownNow();
         } catch (Exception e) {
             logger.error(new SerialException(e));
         }
@@ -154,35 +156,8 @@ public class SerialPortClient {
      * keep reading the serial port
      */
     private void startListenSerialPort(final SerialPortParams strategy) {
-        serialPortReaderExecutorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                readDataFromSerialPort(strategy);
-            }
-        });
-    }
-
-    /**
-     * read data from serial port
-     *
-     * @param strategy
-     */
-    private void readDataFromSerialPort(SerialPortParams strategy) {
-        while (true) {
-            try {
-                if (inputStream == null) {
-                    continue;
-                }
-                byte[] buffer = new byte[strategy.getInputStreamSizeInByte()];
-                int len = inputStream.read(buffer);
-                if (len > 0) {
-                    serialPortReaderListener.onDataChanged(buffer);
-                }
-                Util.sleep(strategy.getSerialPortReaderIntervalTimeInMillis());
-            } catch (Exception e) {
-                logger.error(new SerialException(e));
-            }
-        }
+        readerThread = new ReaderThread(strategy);
+        readerThread.start();
     }
 
     /**
@@ -191,29 +166,40 @@ public class SerialPortClient {
     private SerialPortClient() {
     }
 
-    private static class SerialPortReaderThreadFactory implements ThreadFactory {
-        private static final AtomicInteger poolNumber = new AtomicInteger(1);
-        private final ThreadGroup group;
-        private final AtomicInteger threadNumber = new AtomicInteger(1);
-        private final String namePrefix;
+    private class ReaderThread extends Thread {
+        int bufferLength = 64;
+        long durationInMillisSeconds = 10;
 
-        public SerialPortReaderThreadFactory() {
-            SecurityManager s = System.getSecurityManager();
-            group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-            namePrefix = "SerialPortReader-pool-" +
-                    poolNumber.getAndIncrement() +
-                    "-thread-";
+        public ReaderThread(SerialPortParams serialPortParams) {
+            bufferLength = serialPortParams.getInputStreamSizeInByte();
+            durationInMillisSeconds = serialPortParams.getSerialPortReaderIntervalTimeInMillis();
         }
 
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread t = new Thread(group, r, namePrefix
-                    + threadNumber.getAndIncrement(), 0);
-            if (t.isDaemon())
-                t.setDaemon(false);
-            if (t.getPriority() != Thread.NORM_PRIORITY)
-                t.setPriority(Thread.NORM_PRIORITY);
-            return t;
+        public void run() {
+            while (true) {
+                if (isReaderThreadStopped) {
+                    logger.info("serial port reader quited");
+                    return;
+                }
+
+                int len;
+                try {
+                    byte[] buffer = new byte[bufferLength];
+                    len = inputStream.read(buffer);
+                    if (len > 0) {
+                        serialPortReaderListener.onDataChanged(buffer);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    Thread.sleep(durationInMillisSeconds);
+                } catch (InterruptedException e) {
+                    logger.info("serial port reader quited");
+                    return;
+                }
+            }
         }
     }
 }

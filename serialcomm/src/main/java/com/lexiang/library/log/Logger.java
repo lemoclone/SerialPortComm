@@ -21,7 +21,7 @@ public class Logger {
     private static LogcatThread logcatThread = null;
     private static final int TIMEOUT = 200;
 
-    private String logDir = "/mnt/sdcard/gobike/";
+    private String logDir = "/mnt/sdcard/serial_port_log/";
     private String infoDir = logDir + "info/";
     private String errorDir = logDir + "error/";
 
