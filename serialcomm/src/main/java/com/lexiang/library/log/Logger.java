@@ -33,10 +33,15 @@ public class Logger {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
     SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss:SSS");
 
+    public static boolean flag = true;
+
     protected Logger() {
     }
 
     public void info(String str) {
+        if(!flag){
+            return;
+        }
         putMessage(infoDir + separator + infoStr(str));
     }
 

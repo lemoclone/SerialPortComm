@@ -1,8 +1,6 @@
 package com.lexiang.library.queue;
 
 
-import android.util.Log;
-
 import com.lexiang.library.log.Logger;
 import com.lexiang.library.log.LoggerFactory;
 
@@ -37,7 +35,6 @@ class Dispatcher extends Thread {
             }
             SerialPortData<?> request = null;
             try {
-                log(tag + " take request");
                 request = queue.take();
                 dataHandler.handleData(request);
             } catch (InterruptedException e) {
@@ -49,7 +46,6 @@ class Dispatcher extends Thread {
     }
 
     private void log(String str) {
-        Log.i(tag, str);
         logger.info(str);
     }
 }
