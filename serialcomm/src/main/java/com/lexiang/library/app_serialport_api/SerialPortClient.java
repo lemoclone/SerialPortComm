@@ -43,7 +43,7 @@ public class SerialPortClient {
      */
     private static final int TIME_FOR_WAIT_OPEN_IN_MILLIS = 500;
     /**
-     * serial port reader flag
+     * serial port reader debugFlag
      */
     private static volatile boolean isReaderThreadStopped = false;
     /**
