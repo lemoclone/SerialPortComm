@@ -5,6 +5,7 @@ package com.lexiang.library.queue;
  */
 public class SerialPortWriter {
     private static DataQueue mDataQueue;
+    private static SerialPortData previousRequest;
 
     public static void init(DataHandler dataHandler) {
         if (null == mDataQueue) {
@@ -21,6 +22,7 @@ public class SerialPortWriter {
         if (mDataQueue == null) {
             return;
         }
+        previousRequest = request;
         mDataQueue.add(request);
     }
 
@@ -28,6 +30,10 @@ public class SerialPortWriter {
         if (mDataQueue != null) {
             mDataQueue.stop();
         }
+    }
+
+    public static void reSent() {
+        mDataQueue.add(previousRequest);
     }
 
     private SerialPortWriter() {
