@@ -1,6 +1,4 @@
-Serial port library
-===================
-Android 串口库
+#Android 串口库
 
 ## Setup
 添加 jitpack 依赖
