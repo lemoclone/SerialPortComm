@@ -73,8 +73,8 @@ public class SerialPortClient {
      *
      * @param serialPortStrategy parameters of serial port
      */
-    public void start(SerialPortParams serialPortStrategy) {
-        this.start(serialPortStrategy, new ByteSerialPortReaderListener());
+    public int start(SerialPortParams serialPortStrategy) {
+        return this.start(serialPortStrategy, new ByteSerialPortReaderListener());
     }
 
     /**
@@ -83,12 +83,13 @@ public class SerialPortClient {
      * @param serialPortStrategy       parameters of serial port
      * @param serialPortReaderListener callback after read data
      */
-    public void start(SerialPortParams serialPortStrategy,
+    public int start(SerialPortParams serialPortStrategy,
                       SerialPortReaderListener serialPortReaderListener) {
         this.serialPortReaderListener = serialPortReaderListener;
-        openSerialPort(serialPortStrategy);
+        int res = openSerialPort(serialPortStrategy);
         Util.sleep(TIME_FOR_WAIT_OPEN_IN_MILLIS);
         startListenSerialPort(serialPortStrategy);
+        return res;
     }
 
     /**
@@ -118,7 +119,7 @@ public class SerialPortClient {
      *
      * @param strategy
      */
-    private void openSerialPort(SerialPortParams strategy) {
+    private int openSerialPort(SerialPortParams strategy) {
         try {
             if (serialPortConnector != null) {
                 close();
@@ -131,9 +132,11 @@ public class SerialPortClient {
             serialPortConnector.connect();
             inputStream = serialPortConnector.getFileInputStream();
             outputStream = serialPortConnector.getOutputStream();
+            return 1;
         } catch (SecurityException e) {
             logger.error(new SerialException(e));
         }
+        return -1;
     }
 
     /**
@@ -185,6 +188,10 @@ public class SerialPortClient {
                 int len;
                 try {
                     byte[] buffer = new byte[bufferLength];
+                    if (inputStream == null) {
+                        logger.info("serial port reader quited,cause: inputStream == null");
+                        return;
+                    }
                     len = inputStream.read(buffer);
                     if (len > 0) {
                         serialPortReaderListener.onDataChanged(buffer);
