@@ -84,7 +84,7 @@ public class SerialPortClient {
      * @param serialPortReaderListener callback after read data
      */
     public int start(SerialPortParams serialPortStrategy,
-                      SerialPortReaderListener serialPortReaderListener) {
+                     SerialPortReaderListener serialPortReaderListener) {
         this.serialPortReaderListener = serialPortReaderListener;
         int res = openSerialPort(serialPortStrategy);
         Util.sleep(TIME_FOR_WAIT_OPEN_IN_MILLIS);
@@ -132,6 +132,9 @@ public class SerialPortClient {
             serialPortConnector.connect();
             inputStream = serialPortConnector.getFileInputStream();
             outputStream = serialPortConnector.getOutputStream();
+            if (inputStream == null || outputStream == null) {
+                return -1;
+            }
             return 1;
         } catch (SecurityException e) {
             logger.error(new SerialException(e));
