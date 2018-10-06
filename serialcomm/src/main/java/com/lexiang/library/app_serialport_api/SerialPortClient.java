@@ -169,7 +169,7 @@ public class SerialPortClient {
     /**
      * prevent init
      */
-    private SerialPortClient() {
+    public SerialPortClient() {
     }
 
     private class ReaderThread extends Thread {
