@@ -6,17 +6,6 @@ package com.lexiang.library.queue;
 public class SerialPortReader2 {
     private DataQueue mDataQueue;
 
-    public void init(DataHandler incomeDataHandler) {
-        if (null == mDataQueue) {
-            synchronized (SerialPortWriter.class) {
-                if(null == mDataQueue) {
-                    mDataQueue = new DataQueue(incomeDataHandler, "ReaderThread");
-                    mDataQueue.start();
-                }
-            }
-        }
-    }
-
     public void addRequest(SerialPortData<?> request) {
         if (null == mDataQueue) {
             return;
@@ -30,6 +19,8 @@ public class SerialPortReader2 {
         }
     }
 
-    private SerialPortReader2() {
+    public SerialPortReader2(DataHandler incomeDataHandler) {
+        mDataQueue = new DataQueue(incomeDataHandler, "ReaderThread");
+        mDataQueue.start();
     }
 }

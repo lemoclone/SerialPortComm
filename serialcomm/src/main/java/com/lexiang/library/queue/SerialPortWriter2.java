@@ -7,17 +7,6 @@ public class SerialPortWriter2 {
     private DataQueue mDataQueue;
     private SerialPortData previousRequest;
 
-    public void init(DataHandler dataHandler) {
-        if (null == mDataQueue) {
-            synchronized (SerialPortWriter2.class) {
-                if (null == mDataQueue) {
-                    mDataQueue = new DataQueue(dataHandler, "SerialPortWriter");
-                    mDataQueue.start();
-                }
-            }
-        }
-    }
-
     public void addWriteRequest(SerialPortData<?> request) {
         if (mDataQueue == null) {
             return;
@@ -36,6 +25,8 @@ public class SerialPortWriter2 {
         mDataQueue.add(previousRequest);
     }
 
-    private SerialPortWriter2() {
+    public SerialPortWriter2(DataHandler dataHandler) {
+        mDataQueue = new DataQueue(dataHandler, "SerialPortWriter");
+        mDataQueue.start();
     }
 }
