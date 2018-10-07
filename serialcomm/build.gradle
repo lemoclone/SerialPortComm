@@ -4,14 +4,14 @@ apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.lexiang.library'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 27
-        buildToolsVersion "27.0.3"
-        versionCode 16
-        versionName "1.1.16"
+        targetSdkVersion 26
+        versionCode 21
+        versionName "1.2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -30,6 +30,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
 }

@@ -8,7 +8,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.0'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.2'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
 }
 
@@ -16,8 +16,4 @@ allprojects {
     repositories {
         jcenter()
         maven { url 'https://maven.google.com' }    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
