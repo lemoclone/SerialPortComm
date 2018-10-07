@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.lexiang.serialportcomm"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 26
+        buildToolsVersion "27.0.3"
         versionCode 1
         versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -20,10 +20,6 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testCompile 'junit:junit:4.12'
-    compile project(path: ':serialcomm')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(path: ':serialcomm')
 }
