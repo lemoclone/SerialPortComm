@@ -3,7 +3,6 @@
 /.DS_Store
 /build
 /captures
-/gradle.properties
 /import-summary.txt
 /app/build
 /app/lint.xml
