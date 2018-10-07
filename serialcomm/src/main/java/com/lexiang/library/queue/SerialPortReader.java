@@ -4,32 +4,23 @@ package com.lexiang.library.queue;
  * the queue consist read data from serial port
  */
 public class SerialPortReader {
-    private static DataQueue mDataQueue;
+    private DataQueue mDataQueue;
 
-    public static void init(DataHandler incomeDataHandler) {
-        if (null == mDataQueue) {
-            synchronized (SerialPortWriter.class) {
-                if(null == mDataQueue) {
-                    mDataQueue = new DataQueue(incomeDataHandler, "ReaderThread");
-                    mDataQueue.start();
-                }
-            }
-        }
-    }
-
-    public static void addRequest(SerialPortData<?> request) {
+    public void addRequest(SerialPortData<?> request) {
         if (null == mDataQueue) {
             return;
         }
         mDataQueue.add(request);
     }
 
-    public static void quit() {
+    public void quit() {
         if (mDataQueue != null) {
             mDataQueue.stop();
         }
     }
 
-    private SerialPortReader() {
+    public SerialPortReader(DataHandler incomeDataHandler) {
+        mDataQueue = new DataQueue(incomeDataHandler, "ReaderThread");
+        mDataQueue.start();
     }
 }

@@ -4,9 +4,8 @@ import android.util.Log;
 
 import com.lexiang.library.log.Logger;
 import com.lexiang.library.log.LoggerFactory;
-import com.lexiang.library.utils.ByteSerialPortData;
 import com.lexiang.library.queue.DataHandleListener;
-import com.lexiang.library.queue.SerialPortWriter;
+import com.lexiang.library.utils.ByteSerialPortData;
 
 class OutComeSignalDaemon extends Thread {
     private Logger logger = LoggerFactory.getLog(this.getClass());
@@ -61,7 +60,7 @@ class OutComeSignalDaemon extends Thread {
                     }
                 });
 
-                SerialPortWriter.addWriteRequest(byteSerialPortData);
+                //SerialPortWriter.addWriteRequest(byteSerialPortData);
             } catch (InterruptedException e) {
                 logInfo("<---serial port poll end--->");
                 return;

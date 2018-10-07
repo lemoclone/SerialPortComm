@@ -2,11 +2,10 @@ package com.lexiang.library.app_serialport_api;
 
 
 import com.lexiang.library.SerialPortParams;
-import com.lexiang.library.utils.ByteSerialPortReaderListener;
-import com.lexiang.library.utils.Util;
 import com.lexiang.library.exception.SerialException;
 import com.lexiang.library.log.Logger;
 import com.lexiang.library.log.LoggerFactory;
+import com.lexiang.library.utils.Util;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -50,32 +49,6 @@ public class SerialPortClient {
      * serial port reader thread
      */
     private ReaderThread readerThread;
-
-
-    /**
-     * get the single instance
-     *
-     * @return SerialPortClient instance
-     */
-    public static SerialPortClient getInstance() {
-        if (serialPortClient == null) {
-            synchronized (SerialPortClient.class) {
-                if (serialPortClient == null) {
-                    serialPortClient = new SerialPortClient();
-                }
-            }
-        }
-        return serialPortClient;
-    }
-
-    /**
-     * add serial port reader listener and try to connect the port
-     *
-     * @param serialPortStrategy parameters of serial port
-     */
-    public int start(SerialPortParams serialPortStrategy) {
-        return this.start(serialPortStrategy, new ByteSerialPortReaderListener());
-    }
 
     /**
      * add serial port reader listener and try to connect the port

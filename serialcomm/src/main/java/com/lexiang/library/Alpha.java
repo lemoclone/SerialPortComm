@@ -2,9 +2,6 @@ package com.lexiang.library;
 
 import android.util.Log;
 
-import com.lexiang.library.utils.ByteSerialPortData;
-import com.lexiang.library.utils.ByteSerialPortReaderListener;
-import com.lexiang.library.utils.ByteUtil;
 import com.lexiang.library.app_serialport_api.Constants;
 import com.lexiang.library.app_serialport_api.SerialPortClient;
 import com.lexiang.library.queue.DataHandleListener;
@@ -12,6 +9,8 @@ import com.lexiang.library.queue.DataHandler;
 import com.lexiang.library.queue.SerialPortData;
 import com.lexiang.library.queue.SerialPortReader;
 import com.lexiang.library.queue.SerialPortWriter;
+import com.lexiang.library.utils.ByteSerialPortData;
+import com.lexiang.library.utils.ByteUtil;
 
 /**
  * Created by hudafei on 11/10/2017.
@@ -31,6 +30,9 @@ public class Alpha {
                 .inputStreamSizeInByte(128)  //set the read buffer size
                 .serialPortPath("/dev/ttyO3").build(); //set the device port path
 
+        final SerialPortClient serialPortClient = new SerialPortClient();
+
+
         DataHandler readerHandler = new DataHandler() {
             @Override
             public void handleData(SerialPortData serialPortData) {
@@ -43,8 +45,7 @@ public class Alpha {
         DataHandler writerHandler = new DataHandler() {
             @Override
             public void handleData(SerialPortData serialPortData) {
-
-                if (SerialPortClient.getInstance().writeData(serialPortData.getDataBytes()) > -1) {
+                if (serialPortClient.writeData(serialPortData.getDataBytes()) > -1) {
                     if (serialPortData.getDataHandleListener() != null) {
                         serialPortData.getDataHandleListener().onSucceed(ByteUtil.toDisplayString(serialPortData.getDataBytes()));
                     }
@@ -56,9 +57,9 @@ public class Alpha {
             }
         };
 
-        SerialPortReader.init(readerHandler);
-        SerialPortWriter.init(writerHandler);
-        SerialPortClient.getInstance().start(serialPortParams);
+        SerialPortReader serialPortReader = new SerialPortReader(readerHandler);
+        SerialPortWriter serialPortWriter = new SerialPortWriter(writerHandler);
+
 
         //i.e. write a empty byte array with length of 10 into serial port
         byte[] bytes = new byte[10];
@@ -74,6 +75,6 @@ public class Alpha {
             }
         });
 
-        SerialPortWriter.addWriteRequest(byteSerialPortData);
+        serialPortWriter.addWriteRequest(byteSerialPortData);
     }
 }
