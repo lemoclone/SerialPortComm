@@ -5,7 +5,7 @@ android {
     defaultConfig {
         applicationId "com.lexiang.serialportcomm"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 27
         buildToolsVersion "27.0.3"
         versionCode 1
         versionName "1.0.1"
