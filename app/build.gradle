@@ -20,6 +20,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':serialcomm')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(path: ':serialcomm')
 }

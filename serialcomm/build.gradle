@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.lexiang.library'
 
@@ -9,8 +10,8 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         buildToolsVersion "27.0.3"
-        versionCode 14
-        versionName "1.1.14"
+        versionCode 15
+        versionName "1.1.15"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
