@@ -11,7 +11,7 @@ import com.lexiang.library.queue.SerialPortData;
 public class ByteSerialPortReaderListener implements SerialPortReaderListener {
 
     @Override
-    public void onDataChanged(byte[] data) {
+    public void onDataChanged(byte[] data, int realSize) {
         SerialPortData serialPortData = new ByteSerialPortData(data, new DataHandleListener() {
             @Override
             public void onSucceed(String str) {
