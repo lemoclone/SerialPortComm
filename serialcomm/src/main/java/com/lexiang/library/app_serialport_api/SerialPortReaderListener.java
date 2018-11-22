@@ -7,6 +7,7 @@ public interface SerialPortReaderListener {
     /**
      * event when read data from serial port
      * @param data byte[] data
+     * @param realSize valid data size
      */
     void onDataChanged(byte[] data,int realSize);
 }
