@@ -8,5 +8,5 @@ public interface SerialPortReaderListener {
      * event when read data from serial port
      * @param data byte[] data
      */
-    void onDataChanged(byte[] data);
+    void onDataChanged(byte[] data,int realSize);
 }

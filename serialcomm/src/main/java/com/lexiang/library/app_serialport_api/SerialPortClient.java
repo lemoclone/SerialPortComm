@@ -170,7 +170,7 @@ public class SerialPortClient {
                     }
                     len = inputStream.read(buffer);
                     if (len > 0) {
-                        serialPortReaderListener.onDataChanged(buffer);
+                        serialPortReaderListener.onDataChanged(buffer,len);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
